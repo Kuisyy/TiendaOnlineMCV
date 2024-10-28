@@ -6,7 +6,27 @@
     <title>Main</title>
 </head>
 <body>
-    <h1>Estas es el main</h1>
+    <h1>Lista de Productos</h1>
     
+    <?php if (!empty($products)): ?>
+        <table border="1">
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Stock</th>
+            </tr>
+            <?php foreach ($products as $product): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($product->getName()); ?></td>
+                    <td><?php echo htmlspecialchars($product->getprice()); ?></td>
+                    <td><?php echo htmlspecialchars($product->getDescription()); ?></td>
+                    <td><?php echo htmlspecialchars($product->getStock()); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <p>No hay productos disponibles.</p>
+    <?php endif; ?>
 </body>
 </html>

@@ -1,16 +1,19 @@
 <?php
-class userRepository{
+class userRepository {
     public static function login($username, $password) {
         $db = Conectar::conexion(); 
-        $q = "SELECT * FROM users WHERE username ='$username' AND password='$password'"; 
+        // Seleccionamos las columnas específicas que necesitamos
+        $q = "SELECT id_usr, username, rol FROM users WHERE username = '$username' AND password = '$password'"; 
         $result = $db->query($q);
-        if ($result->num_rows > 0) {
+
+        if ($result && $result->num_rows > 0) { // Validamos que el resultado existe y tiene filas
             $datos = $result->fetch_assoc();
-            return new User($datos);
+            return new User($datos); // Pasamos los datos al constructor de User
         } else {
             return false;
         }
     }
+
     public static function logout() {
         session_start(); 
         session_unset(); 
@@ -19,5 +22,4 @@ class userRepository{
         exit;
     }
 }
-
 ?>

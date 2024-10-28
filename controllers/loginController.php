@@ -7,7 +7,7 @@ if(isset($_POST['login'])){
     $password = $_POST['password'];
     $user = userRepository::login($username,$password);
     if($user){
-        $_SESSION['username'] = $user->getUsername();
+        $_SESSION['user'] = $user;
         header('Location:index.php');
         exit();
     }
