@@ -8,7 +8,7 @@ class User
 	
 	function __construct($datos)
 	{
-        $this->id = $datos['id'];
+        $this->id = $datos['id_usr'];
 		$this->username=$datos['username'];
         $this->rol = $datos['rol'];
 	}

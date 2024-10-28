@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once("models/user.php");
 require_once("models/userRepository.php");
 
@@ -9,10 +8,13 @@ if(isset($_POST['login'])){
     $user = userRepository::login($username,$password);
     if($user){
         $_SESSION['username'] = $user->getUsername();
+        header('Location:index.php');
+        exit();
     }
     else{
         $error = "Invalid credentials";
         header("Location: index.php?error=".$error);
+        exit();
     }
 }
 
