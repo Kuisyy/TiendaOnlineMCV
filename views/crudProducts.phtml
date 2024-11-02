@@ -6,17 +6,21 @@
     <title>addProduct</title>
 </head>
 <body>
+    <h2>Añadir producto</h2>
     <form action="index.php" method="post">
-        <label for="name">Name:</label>
+        Name:
         <input type="text" id="name" name="name">
         <br><br>
-        <label for="price">Price:</label>
+        Price:
         <input type="number" id="price" name="price">
         <br><br>
-        <label for="description">Description:</label>
+        Description:
         <textarea id="description" name="description" cols="30" rows="10"></textarea>
         <br><br>
-        <input type="submit" value="addProduct">
+        Stock:
+        <input type="number" id="stock" name="stock" >
+        <br><br>
+        <input type="submit" value="Add Product" name="addProduct">
     </form>
  </body
     
