@@ -21,9 +21,7 @@ class productsRepository{
     public static function deleteProduct($id) {
         $db = Conectar::conexion();
         $q = "DELETE FROM products WHERE id_product = '$id'";
-        if (!$db->query($q)) {
-            echo "Error en la consulta: " . $db->error;
-        }
+        $db->query($q);
     }
     
 

@@ -15,7 +15,6 @@
                 <th>Precio</th>
                 <th>Descripción</th>
                 <th>Stock</th>
-                <th>Acciones</th>
             </tr>
             <?php foreach ($products as $product): ?>
                 <tr>
@@ -23,9 +22,6 @@
                     <td><?php echo htmlspecialchars($product->getprice()); ?></td>
                     <td><?php echo htmlspecialchars($product->getDescription()); ?></td>
                     <td><?php echo htmlspecialchars($product->getStock()); ?></td>
-                    <td>
-                        <a href="index.php?delete=<?php echo $product->getId(); ?>">Eliminar</a>
-                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>
