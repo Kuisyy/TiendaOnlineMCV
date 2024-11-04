@@ -2,19 +2,20 @@
 require_once("models/user.php");
 require_once("models/product.php");
 require_once("models/productsRepository.php");
+require_once("models/pedidoRepository.php"); // Agregar referencia al PedidoRepository
 
 session_start();
 
 $products = productsRepository::getAllProducts();
 
 if(isset($_POST['addProduct'])){
-    $id_usr= $_SESSION['user']->getId();
+    $id_usr = $_SESSION['user']->getId();
     $name = $_POST['name'];
     $price = $_POST['price'];
     $description = $_POST['description'];
     $stock = $_POST['stock'];
-    productsRepository::addProduct($id_usr,$price,$name,$description,$stock);
-    header('Location: index.php'); // Redirige después de eliminar
+    productsRepository::addProduct($id_usr, $price, $name, $description, $stock);
+    header('Location: index.php'); // Redirige después de añadir
     exit();
 }
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-10-2024 a las 19:28:45
+-- Tiempo de generación: 04-11-2024 a las 10:46:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,35 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `tiendabasicaonline`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lineapedido`
+--
+
+CREATE TABLE `lineapedido` (
+  `num_linea` int(11) NOT NULL,
+  `id_pedido` int(11) NOT NULL,
+  `id_product` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `precio` decimal(10,0) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedido`
+--
+
+CREATE TABLE `pedido` (
+  `id_pedido` int(11) NOT NULL,
+  `id_usr` int(11) NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `fecha` date NOT NULL,
+  `estado` varchar(255) NOT NULL,
+  `precioTotal` decimal(10,0) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -42,7 +71,8 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id_product`, `id_usr`, `price`, `name`, `description`, `stock`) VALUES
 (1, 1, 1, 'Boligrafo', 'Boligrafo azul dpm', 20),
-(2, 1, 1, 'Boligrafo', 'Boligrafo rojo dpm', 20);
+(4, 1, 1, 'Boligrafo ', 'Boligrafo rojo dpm', 20),
+(7, 1, 1, 'Boligrafo ', 'Boligrafo negro dpm', 20);
 
 -- --------------------------------------------------------
 
@@ -70,6 +100,21 @@ INSERT INTO `users` (`id_usr`, `username`, `password`, `rol`) VALUES
 --
 
 --
+-- Indices de la tabla `lineapedido`
+--
+ALTER TABLE `lineapedido`
+  ADD PRIMARY KEY (`num_linea`),
+  ADD KEY `id_pedido` (`id_pedido`,`id_product`),
+  ADD KEY `id_product` (`id_product`);
+
+--
+-- Indices de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  ADD PRIMARY KEY (`id_pedido`),
+  ADD KEY `id_usr` (`id_usr`);
+
+--
 -- Indices de la tabla `products`
 --
 ALTER TABLE `products`
@@ -87,10 +132,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `lineapedido`
+--
+ALTER TABLE `lineapedido`
+  MODIFY `num_linea` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `products`
 --
 ALTER TABLE `products`
-  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -101,6 +158,19 @@ ALTER TABLE `users`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `lineapedido`
+--
+ALTER TABLE `lineapedido`
+  ADD CONSTRAINT `lineapedido_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `products` (`id_product`);
+
+--
+-- Filtros para la tabla `pedido`
+--
+ALTER TABLE `pedido`
+  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`id_usr`) REFERENCES `users` (`id_usr`),
+  ADD CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`id_pedido`) REFERENCES `lineapedido` (`id_pedido`);
 
 --
 -- Filtros para la tabla `products`
