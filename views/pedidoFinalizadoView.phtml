@@ -1,0 +1,72 @@
+<?php
+session_start();
+require_once("./models/PedidoRepository.php");
+require_once("../models/LineaPedidoRepository.php");
+
+// Verificar que el usuario esté autenticado
+if (!isset($_SESSION['user'])) {
+    echo "Inicie sesión para ver su pedido finalizado.";
+    exit;
+}
+
+$userId = $_SESSION['user']->getId();
+
+// Obtener el último pedido finalizado
+$pedido = PedidoRepository::getLastFinalizedPedido($userId);
+
+if (!$pedido) {
+    echo "<p>No se ha encontrado ningún pedido finalizado recientemente.</p>";
+    exit;
+}
+
+// Obtener las líneas del pedido finalizado
+$lineasPedido = LineaPedidoRepository::getLineasByPedido($pedido->getId());
+$totalPedido = $pedido->getPrecioTotal();
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Finalizado</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Añadir CSS según tu diseño -->
+</head>
+<body>
+    <h1>¡Gracias por tu compra!</h1>
+    <p>Tu pedido ha sido completado con éxito. A continuación, encontrarás un resumen del pedido.</p>
+
+    <h2>Resumen del Pedido</h2>
+
+    <?php if (count($lineasPedido) > 0): ?>
+        <table border="1">
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Precio Total</th>
+            </tr>
+            <?php foreach ($lineasPedido as $linea): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($linea['name']); ?></td>
+                    <td><?php echo htmlspecialchars($linea['cantidad']); ?></td>
+                    <td><?php echo htmlspecialchars(number_format($linea['price'], 2)); ?> €</td>
+                    <td><?php echo htmlspecialchars(number_format($linea['precio'], 2)); ?> €</td>
+                </tr>
+            <?php endforeach; ?>
+            <tr>
+                <td colspan="3"><strong>Total del Pedido:</strong></td>
+                <td><?php echo htmlspecialchars(number_format($totalPedido, 2)); ?> €</td>
+            </tr>
+        </table>
+    <?php else: ?>
+        <p>No se encontraron productos en el pedido finalizado.</p>
+    <?php endif; ?>
+
+    <!-- Opciones de navegación -->
+    <div>
+        <a href="tienda.php">Volver a la Tienda</a> |
+        <a href="historialPedidos.php">Ver Historial de Pedidos</a>
+    </div>
+</body>
+</html>

@@ -5,6 +5,7 @@ class LineaPedido {
     private $id_producto;
     private $cantidad;
     private $precio;  // Precio total de esta línea de pedido
+    private $precio_unitario; // Agregado para el precio unitario
 
     public function __construct($data) {
         $this->num_linea = $data['num_linea'];
@@ -12,6 +13,9 @@ class LineaPedido {
         $this->id_producto = $data['id_producto'];
         $this->cantidad = $data['cantidad'];
         $this->precio = $data['precio'];
+        
+        // Puedes obtener el precio unitario desde un método de ProductRepository si lo deseas
+        $this->precio_unitario = $data['precio'] / $this->cantidad; // Asegúrate de que la cantidad no sea cero
     }
 
     public function getNumLinea() { 
@@ -29,5 +33,10 @@ class LineaPedido {
     public function getPrecio() { 
         return $this->precio; 
     }
+    public function getPrecioUnitario() {
+        return $this->precio_unitario; // Devuelve el precio unitario
+    }
+
 }
+
 ?>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido en Proceso</title>
+</head>
+<body>
+    <h1>Pedido en Proceso</h1>
+
+    <!-- Verificamos si hay un pedido -->
+    <?php if ($pedido): ?>
+        <h2>Pedido ID: <?php echo htmlspecialchars($pedido->getId()); ?></h2>
+        <h3>Estado: <?php echo htmlspecialchars($pedido->getEstado()); ?></h3>
+
+        <!-- Tabla de productos en el pedido -->
+        <table border="1">
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Total</th>
+            </tr>
+
+            <!-- Iteramos sobre las líneas del pedido -->
+            <?php foreach ($lineas as $linea): ?>
+                <tr>
+                    <!-- Obtener el nombre del producto desde la relación con LineaPedido -->
+                    <td><?php echo htmlspecialchars($linea->getNombre()); ?></td> 
+                    <!-- Cantidad -->
+                    <td><?php echo htmlspecialchars($linea->getCantidad()); ?></td>  
+                    <!-- Precio total -->
+                    <td><?php echo htmlspecialchars($linea->getPrecioTotal()); ?></td>  
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <p>No tienes un pedido en proceso.</p>
+    <?php endif; ?>
+
+</body>
+</html>
