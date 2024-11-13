@@ -2,7 +2,7 @@
 class LineaPedido {
     private $num_linea;
     private $id_pedido;
-    private $id_producto;
+    private $id_product;
     private $cantidad;
     private $precio;  // Precio total de esta línea de pedido
     private $precio_unitario; // Agregado para el precio unitario
@@ -10,7 +10,7 @@ class LineaPedido {
     public function __construct($data) {
         $this->num_linea = $data['num_linea'];
         $this->id_pedido = $data['id_pedido'];
-        $this->id_producto = $data['id_producto'];
+        $this->id_product = $data['id_product'];
         $this->cantidad = $data['cantidad'];
         $this->precio = $data['precio'];
         
@@ -25,7 +25,7 @@ class LineaPedido {
         return $this->id_pedido; 
     }
     public function getIdProducto() { 
-        return $this->id_producto; 
+        return $this->id_product; 
     }
     public function getCantidad() { 
         return $this->cantidad; 
@@ -36,6 +36,11 @@ class LineaPedido {
     public function getPrecioUnitario() {
         return $this->precio_unitario; // Devuelve el precio unitario
     }
+    public function getProductName() {
+        $product = ProductsRepository::getProductById($this->id_product);
+        return $product ? $product->getName() : 'Producto no encontrado';
+    }
+    
 
 }
 

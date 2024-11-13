@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Más Vendidos</title>
+</head>
+<body>
+    <h1>Productos Más Vendidos</h1>
+    
+    <?php if (!empty($productosMasVendidos)): ?>
+        <table border="1">
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad Vendida</th>
+                <th>Precio</th>
+            </tr>
+            <?php foreach ($productosMasVendidos as $producto): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($producto['name']); ?></td>
+                    <td><?php echo $producto['total_comprado']; ?></td>
+                    <td><?php echo $producto['price']; ?> €</td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <p>No hay productos más vendidos registrados.</p>
+    <?php endif; ?>
+</body>
+</html>

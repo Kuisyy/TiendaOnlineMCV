@@ -8,7 +8,8 @@ class PedidoRepository {
     public static function createPedido($id_usr) {
         $conexion = Conectar::conexion();
         $nombre = "Pedido de " . date('Y-m-d H:i:s'); // Nombre único para el pedido
-        $sql = "INSERT INTO pedido (id_usr, nombre, fecha, estado, precioTotal) VALUES ($id_usr, '$nombre', NOW(), 'En Proceso', 0)";
+        $sql = "INSERT INTO pedido (id_usr, nombre, fecha, estado, precioTotal) 
+                VALUES ($id_usr, '$nombre', NOW(), 'en proceso', 0)";
         $conexion->query($sql);
         return $conexion->insert_id; // Retorna el ID del pedido creado
     }
@@ -16,31 +17,61 @@ class PedidoRepository {
     // Obtener el pedido activo del usuario (estado 'En Proceso')
     public static function getActivePedido($userId) {
         $db = Conectar::conexion();
-        $query = "SELECT * FROM pedido WHERE id_usr = '$userId' AND estado = 'activo'";  // Ejemplo de query
+        $query = "SELECT * FROM pedido WHERE id_usr = '$userId' AND estado = 'en proceso'";
         $result = $db->query($query);
     
         if ($result && $row = $result->fetch_assoc()) {
-            return new Pedido($row);  // Crear un objeto Pedido pasando los datos obtenidos
+            return new Pedido($row);
         }
-        return null;  // Si no se encuentra ningún pedido
+        return null;
     }
-    
 
-    // Añadir una línea de pedido (producto) a un pedido existente
+    // Obtener un pedido por su ID
+    public static function getPedidoById($id_pedido) {
+        $db = Conectar::conexion();
+        $query = "SELECT * FROM pedido WHERE id_pedido = '$id_pedido'";
+        $result = $db->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return new Pedido($row);
+        }
+        return null;
+    }
+
+    // Actualizar un pedido con la dirección y detalles del pago
+    public static function actualizarPedidoConDireccion($id_pedido, $direccion, $metodoPago, $numeroTarjeta = null, $bancoNombre = null, $bancoCuenta = null) {
+        $db = Conectar::conexion();
+        $query = "UPDATE pedido SET 
+                    direccion = '$direccion', 
+                    metodo_pago = '$metodoPago', 
+                    numero_tarjeta = '$numeroTarjeta', 
+                    banco_nombre = '$bancoNombre', 
+                    banco_cuenta = '$bancoCuenta' 
+                  WHERE id_pedido = '$id_pedido'";
+        $db->query($query);
+    }
+
+    // Marcar un pedido como pagado (si el pago fue con tarjeta o con banco)
+    public static function marcarPedidoComoPagado($id_pedido) {
+        $db = Conectar::conexion();
+        $query = "UPDATE pedido SET estado = 'pagado' WHERE id_pedido = '$id_pedido'";
+        $db->query($query);
+    }
+
+    // Añadir una línea de producto a un pedido
     public static function addLineToPedido($id_pedido, $id_product, $cantidad, $precio_unitario) {
         $conexion = Conectar::conexion();
         $precio_total = $cantidad * $precio_unitario;
-        $sql = "INSERT INTO lineapedido (id_pedido, id_product, cantidad, precio) VALUES ($id_pedido, $id_product, $cantidad, $precio_total)";
+        $sql = "INSERT INTO lineapedido (id_pedido, id_product, cantidad, precio) 
+                VALUES ($id_pedido, $id_product, $cantidad, $precio_total)";
         $conexion->query($sql);
-
-        // Actualizar el precio total del pedido
-        self::actualizarTotalPedido($id_pedido);
     }
 
     // Finalizar un pedido (cambiar estado a 'Finalizado')
-    public static function finalizePedido($id_pedido) {
+    public static function marcarPedidoFinalizado($id_pedido) {
         $conexion = Conectar::conexion();
-        $sql = "UPDATE pedido SET estado = 'Finalizado' WHERE id_pedido = $id_pedido";
+        $sql = "UPDATE pedido SET estado = 'finalizado' WHERE id_pedido = $id_pedido";
         $conexion->query($sql);
     }
 
@@ -55,7 +86,7 @@ class PedidoRepository {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Recalcular y actualizar el total del pedido
+    // Actualizar el total del pedido basado en las líneas de pedido
     public static function actualizarTotalPedido($id_pedido) {
         $conexion = Conectar::conexion();
         $sql = "UPDATE pedido SET precioTotal = (
@@ -64,11 +95,16 @@ class PedidoRepository {
         $conexion->query($sql);
     }
 
-    public static function getLastFinalizedPedido($id_usr) {
-        $conexion = Conectar::conexion();
-        $sql = "SELECT * FROM pedido WHERE id_usr = $id_usr AND estado = 'Finalizado' ORDER BY fecha DESC LIMIT 1";
-        $result = $conexion->query($sql);
-        return $result->fetch_object('Pedido');
+    // Obtener el precio total de un pedido
+    public static function obtenerPrecioTotalPedido($id_pedido) {
+        $db = Conectar::conexion();
+        $query = "SELECT SUM(precio) AS total FROM lineapedido WHERE id_pedido = '$id_pedido'";
+        $result = $db->query($query);
+        
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return $row['total'];
+        }
+        return 0; 
     }
-    
 }

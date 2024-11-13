@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,7 @@
     <?php if ($pedido): ?>
         <h2>Pedido ID: <?php echo htmlspecialchars($pedido->getId()); ?></h2>
         <h3>Estado: <?php echo htmlspecialchars($pedido->getEstado()); ?></h3>
+        <h3>Precio Total: <?php echo htmlspecialchars($pedido->getPrecioTotal()); ?></h3>
 
         <!-- Tabla de productos en el pedido -->
         <table border="1">
@@ -19,23 +20,82 @@
                 <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Precio Total</th>
+                <th>Eliminar</th>
             </tr>
 
             <!-- Iteramos sobre las líneas del pedido -->
             <?php foreach ($lineas as $linea): ?>
                 <tr>
                     <!-- Obtener el nombre del producto desde la relación con LineaPedido -->
-                    <td><?php echo htmlspecialchars($linea->getNombre()); ?></td> 
+                    <td><?php echo htmlspecialchars($linea->getProductName()); ?></td> 
                     <!-- Cantidad -->
                     <td><?php echo htmlspecialchars($linea->getCantidad()); ?></td>  
                     <!-- Precio total -->
-                    <td><?php echo htmlspecialchars($linea->getPrecioTotal()); ?></td>  
+                    <td><?php echo htmlspecialchars($linea->getPrecio()); ?></td>  
+                    <td>
+                        <form action="index.php" method="post">
+                            <input type="hidden" name="lineaId" value="<?php echo htmlspecialchars($linea->getNumLinea()); ?>">
+                            <button type="submit" name="removeLine">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </table>
+
+        <!-- Formulario para finalizar el pedido -->
+        <form action="index.php" method="POST">
+    <label for="direccion">Dirección de Envío:</label>
+    <textarea name="direccion" id="direccion" rows="4" required></textarea>
+
+    <label for="metodo_pago">Método de Pago:</label>
+    <select name="metodo_pago" id="metodo_pago" required>
+        <option value="tarjeta">Tarjeta de Crédito</option>
+        <option value="banco">Transferencia Bancaria</option>
+    </select>
+
+    <!-- Campo para los datos de tarjeta (solo si se elige tarjeta) -->
+    <div id="tarjeta" style="display: none;">
+        <label for="numero_tarjeta">Número de Tarjeta:</label>
+        <input type="text" name="numero_tarjeta" id="numero_tarjeta" />
+
+        <label for="fecha_expiracion">Fecha de Expiración:</label>
+        <input type="text" name="fecha_expiracion" id="fecha_expiracion" />
+
+        <label for="codigo_seguridad">Código de Seguridad:</label>
+        <input type="text" name="codigo_seguridad" id="codigo_seguridad" />
+    </div>
+
+    <!-- Campos para los datos bancarios (solo si se elige banco) -->
+    <div id="banco" style="display: none;">
+        <label for="banco_nombre">Nombre del Banco:</label>
+        <input type="text" name="banco_nombre" id="banco_nombre" />
+
+        <label for="banco_cuenta">Número de Cuenta:</label>
+        <input type="text" name="banco_cuenta" id="banco_cuenta" />
+    </div>
+
+    <!-- Botón para finalizar el pedido -->
+    <input type="submit" value="Finalizar Pedido" name="finalizarPedido" />
+</form>
+
+
     <?php else: ?>
         <p>No tienes un pedido en proceso.</p>
     <?php endif; ?>
 
+    <!-- Script para mostrar u ocultar los campos según el método de pago seleccionado -->
+    <script>
+        // Mostrar u ocultar los campos de pago según la selección
+        document.getElementById('metodo_pago').addEventListener('change', function () {
+            var metodoPago = this.value;
+            if (metodoPago === 'tarjeta') {
+                document.getElementById('tarjeta').style.display = 'block';
+                document.getElementById('banco').style.display = 'none';
+            } else if (metodoPago === 'banco') {
+                document.getElementById('tarjeta').style.display = 'none';
+                document.getElementById('banco').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>

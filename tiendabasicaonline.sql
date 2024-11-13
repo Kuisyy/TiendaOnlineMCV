@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-11-2024 a las 10:46:54
+-- Tiempo de generación: 06-11-2024 a las 12:10:20
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -70,9 +70,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id_product`, `id_usr`, `price`, `name`, `description`, `stock`) VALUES
-(1, 1, 1, 'Boligrafo', 'Boligrafo azul dpm', 20),
-(4, 1, 1, 'Boligrafo ', 'Boligrafo rojo dpm', 20),
-(7, 1, 1, 'Boligrafo ', 'Boligrafo negro dpm', 20);
+(12, 1, 1, 'Goma', 'Goma de borrar dpm', 18),
+(13, 1, 1, 'Boligrafo ', 'Boligrafo rojo dpm', 19),
+(14, 1, 1, 'Boligrafo ', 'Boligrafo azul dpm', 12);
 
 -- --------------------------------------------------------
 
@@ -135,19 +135,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `lineapedido`
 --
 ALTER TABLE `lineapedido`
-  MODIFY `num_linea` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `num_linea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
 --
 ALTER TABLE `products`
-  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
@@ -163,14 +163,14 @@ ALTER TABLE `users`
 -- Filtros para la tabla `lineapedido`
 --
 ALTER TABLE `lineapedido`
-  ADD CONSTRAINT `lineapedido_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `products` (`id_product`);
+  ADD CONSTRAINT `lineapedido_ibfk_1` FOREIGN KEY (`id_product`) REFERENCES `products` (`id_product`),
+  ADD CONSTRAINT `lineapedido_ibfk_2` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id_pedido`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`id_usr`) REFERENCES `users` (`id_usr`),
-  ADD CONSTRAINT `pedido_ibfk_2` FOREIGN KEY (`id_pedido`) REFERENCES `lineapedido` (`id_pedido`);
+  ADD CONSTRAINT `pedido_ibfk_1` FOREIGN KEY (`id_usr`) REFERENCES `users` (`id_usr`);
 
 --
 -- Filtros para la tabla `products`

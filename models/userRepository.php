@@ -21,5 +21,21 @@ class userRepository {
         header("Location: index.php");
         exit;
     }
+
+    public static function getUsuarioQueMasHaGastado() {
+        $query = "SELECT u.id_usr, u.username, SUM(p.precioTotal) AS total_gastado
+                  FROM users u
+                  JOIN pedido p ON u.id_usr = p.id_usr
+                  GROUP BY u.id_usr
+                  ORDER BY total_gastado DESC
+                  LIMIT 1";
+    
+    $db = Conectar::conexion();
+    $result = $db->query($query);
+        
+        $usuario = $result->fetch_assoc();
+        return $usuario;
+    }
+    
 }
 ?>

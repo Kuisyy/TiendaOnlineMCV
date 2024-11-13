@@ -39,10 +39,36 @@ class productsRepository {
         }
         return null; // Si no se encuentra el producto
     }
-    public static function updateProductStock($id_product, $newStock) {
-        $conexion = Conectar::conexion();
-        $sql = "UPDATE products SET stock = $newStock WHERE id_product = $id_product";
-        $conexion->query($sql);
+    public static function updateProductStock($id_product, $cantidad) {
+        $db = Conectar::conexion();
+        $sql = "UPDATE products SET stock = stock - $cantidad WHERE id_product = $id_product";
+        if ($db->query($sql) === TRUE) {
+            return true; 
+        } else {
+            return false; 
+        }
     }
+
+
+    public static function getProductosMasVendidos($limit = 5) {
+        // Usar el valor directamente en la consulta, sin bind_param
+        $query = "SELECT p.name, p.price, SUM(lp.cantidad) AS total_comprado
+                  FROM products p
+                  JOIN lineapedido lp ON p.id_product = lp.id_product
+                  GROUP BY p.id_product
+                  ORDER BY total_comprado DESC
+                  LIMIT " . (int)$limit;  // Asegúrate de castar el valor a entero
+    
+    $db = Conectar::conexion();
+    $result = $db->query($query);
+    
+        $productos = [];
+        while ($row = $result->fetch_assoc()) {
+            $productos[] = $row;
+        }
+        return $productos;
+    }
+          
 }
+
 ?>

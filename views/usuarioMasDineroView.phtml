@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario Que Más Ha Gastado</title>
+</head>
+<body>
+    <h1>Usuario Que Más Ha Gastado</h1>
+
+    <?php if ($usuarioMasGastado): ?>
+        <p><strong>Usuario:</strong> <?php echo htmlspecialchars($usuarioMasGastado['username']); ?></p>
+        <p><strong>Total Gastado:</strong> <?php echo number_format($usuarioMasGastado['total_gastado'], 2, ',', '.') . ' €'; ?></p>
+    <?php else: ?>
+        <p>No se encontró un usuario con compras registradas.</p>
+    <?php endif; ?>
+</body>
+</html>
